@@ -62,7 +62,7 @@ A comprehensive, AI-powered e-commerce platform built with Go, GraphQL, PostgreS
 
 1. **Clone the repository**
    ```bash
-   git clone <repository-url>
+   git clone https://github.com/M7madAwawdeh/fintks-store-go.git
    cd fintks-store
    ```
 
@@ -423,5 +423,6 @@ If you encounter any issues or have questions:
 - [ ] Return/refund management
 
 ---
+
 
 **Happy shopping! 🛒✨** 
