@@ -1,0 +1,248 @@
+type User {
+    id: Int!
+    email: String!
+    firstName: String!
+    lastName: String!
+    phone: String
+    address: String
+    city: String
+    country: String
+    createdAt: String!
+    updatedAt: String!
+}
+
+type Category {
+    id: Int!
+    name: String!
+    description: String
+    imageUrl: String
+    parentId: Int
+    createdAt: String!
+}
+
+type Product {
+    id: Int!
+    name: String!
+    price: Float!
+    originalPrice: Float
+    categoryId: Int!
+    category: Category
+    description: String!
+    shortDescription: String
+    imageUrl: String
+    stockQuantity: Int!
+    sku: String
+    weight: Float
+    dimensions: String
+    isActive: Boolean!
+    isFeatured: Boolean!
+    createdAt: String!
+    updatedAt: String!
+    averageRating: Float
+    reviewCount: Int
+    isInWishlist: Boolean
+    isLiked: Boolean
+}
+
+type CartItem {
+    id: Int!
+    userId: Int!
+    productId: Int!
+    product: Product
+    quantity: Int!
+    createdAt: String!
+    updatedAt: String!
+}
+
+type WishlistItem {
+    id: Int!
+    userId: Int!
+    productId: Int!
+    product: Product
+    createdAt: String!
+}
+
+type OrderItem {
+    id: Int!
+    orderId: Int!
+    productId: Int!
+    productName: String!
+    productPrice: Float!
+    quantity: Int!
+    totalPrice: Float!
+    createdAt: String!
+}
+
+type Order {
+    id: Int!
+    userId: Int!
+    user: User
+    orderNumber: String!
+    status: String!
+    totalAmount: Float!
+    shippingAddress: String!
+    shippingCity: String!
+    shippingCountry: String!
+    shippingPhone: String!
+    paymentMethod: String!
+    paymentStatus: String!
+    notes: String
+    createdAt: String!
+    updatedAt: String!
+    items: [OrderItem!]!
+}
+
+type Review {
+    id: Int!
+    userId: Int!
+    user: User
+    productId: Int!
+    rating: Int!
+    title: String
+    comment: String
+    isVerifiedPurchase: Boolean!
+    createdAt: String!
+    updatedAt: String!
+    likeCount: Int
+    isLiked: Boolean
+}
+
+type AuthResponse {
+    user: User!
+    token: String!
+}
+
+type CartSummary {
+    items: [CartItem!]!
+    totalItems: Int!
+    totalPrice: Float!
+}
+
+type SearchResult {
+    products: [Product!]!
+    categories: [Category!]!
+    total: Int!
+}
+
+type Pagination {
+    page: Int!
+    limit: Int!
+    total: Int!
+    totalPages: Int!
+}
+
+input RegisterInput {
+    email: String!
+    password: String!
+    firstName: String!
+    lastName: String!
+    phone: String
+    address: String
+    city: String
+}
+
+input LoginInput {
+    email: String!
+    password: String!
+}
+
+input UpdateUserInput {
+    firstName: String!
+    lastName: String!
+    phone: String
+    address: String
+    city: String
+}
+
+input AddToCartInput {
+    productId: Int!
+    quantity: Int!
+}
+
+input CreateOrderInput {
+    shippingAddress: String!
+    shippingCity: String!
+    shippingPhone: String!
+    paymentMethod: String!
+    notes: String
+}
+
+input CreateReviewInput {
+    productId: Int!
+    rating: Int!
+    title: String
+    comment: String!
+}
+
+type Query {
+    # Authentication
+    me: User
+    
+    # Categories
+    categories: [Category!]!
+    category(id: Int!): Category
+    
+    # Products
+    products(
+        categoryId: Int
+        search: String
+        minPrice: Float
+        maxPrice: Float
+        isFeatured: Boolean
+        page: Int
+        limit: Int
+    ): [Product!]!
+    product(id: Int!): Product
+    featuredProducts: [Product!]!
+    searchProducts(query: String!): SearchResult!
+    
+    # Cart
+    cart: CartSummary!
+    
+    # Wishlist
+    wishlist: [WishlistItem!]!
+    
+    # Orders
+    orders: [Order!]!
+    order(id: Int!): Order
+    
+    # Reviews
+    productReviews(productId: Int!): [Review!]!
+    myReviews: [Review!]!
+}
+
+type Mutation {
+    # Authentication
+    register(input: RegisterInput!): AuthResponse!
+    login(input: LoginInput!): AuthResponse!
+    updateProfile(input: UpdateUserInput!): User!
+    
+    # Cart
+    addToCart(input: AddToCartInput!): CartItem!
+    updateCartItem(id: Int!, quantity: Int!): CartItem!
+    removeFromCart(id: Int!): Boolean!
+    clearCart: Boolean!
+    
+    # Wishlist
+    addToWishlist(productId: Int!): WishlistItem!
+    removeFromWishlist(productId: Int!): Boolean!
+    
+    # Orders
+    createOrder(input: CreateOrderInput!): Order!
+    updateOrderStatus(id: Int!, status: String!): Order!
+    
+    # Reviews
+    createReview(input: CreateReviewInput!): Review!
+    updateReview(id: Int!, rating: Int!, title: String, comment: String!): Review!
+    deleteReview(id: Int!): Boolean!
+    likeReview(id: Int!): Boolean!
+    unlikeReview(id: Int!): Boolean!
+    
+    # Product likes
+    likeProduct(productId: Int!): Boolean!
+    unlikeProduct(productId: Int!): Boolean!
+    
+    # AI Features
+    addProduct(name: String!, price: Float!, categoryId: Int!): Product!
+    translateText(text: String!, from: String!, to: String!): String!
+} 
